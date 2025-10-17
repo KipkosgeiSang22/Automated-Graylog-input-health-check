@@ -133,5 +133,5 @@ async def main():
     tasks = [process_client(client_name, data) for client_name, data in clients_data.items()]
     await asyncio.gather(*tasks)
 
-def run():
-    asyncio.run(main())
+if __name__ == "__main__":
+asyncio.run(main())
