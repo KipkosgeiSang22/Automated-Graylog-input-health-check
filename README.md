@@ -1,74 +1,74 @@
-# Overview
+markdown
+# Log Fetching and Export Script
 
-This Python script utilizes `asyncio` and `aiohttp` to fetch data from a specified API, process it, and export the results to Excel files. The data processing includes sanitizing values, converting timestamps to local timezones, and ensuring valid sheet names for Excel.
+This Python script retrieves logs from multiple Graylog instances and exports the data into an Excel file. It utilizes asynchronous programming to fetch data efficiently and ensures the output is well-formatted.
 
----
+## 🚀 Features
 
-## Features
+- **Asynchronous Fetching**: Utilizes `asyncio` and `aiohttp` for non-blocking API calls to fetch log data.
+- **Data Sanitization**: Cleans log entries by removing control characters and non-ASCII text.
+- **Date Conversion**: Converts UTC timestamps to a specified local timezone.
+- **Excel Export**: Exports data to an Excel file with customized sheet names and formatting.
 
-- Asynchronous HTTP requests for efficient data fetching  
-- Data sanitization to remove control characters and non-ASCII characters  
-- Conversion of UTC timestamps to a specified local timezone  
-- Dynamic Excel sheet creation based on input data  
+## 📄 Setup
 
----
+### Prerequisites
 
-## Dependencies
+Make sure you have Python 3.7 or later installed along with the necessary packages. You can install the required packages using pip:
 
-- `aiohttp`  
-- `pandas`  
-- `pytz`  
+    ```bash
+    pip install aiohttp pandas openpyxl pytz
 
-Install the required packages using pip:
+Configuration
+Create a clients.json file in the same directory as the script. The file should contain the following structure:
 
-```bash
-pip install aiohttp pandas pytz
-
-
-
-Usage
-1. Prepare clients.json
-Create a JSON file named clients.json in the same directory. It should contain the base URLs and any other relevant data for the clients. Example structure:
-{
-    "client1": {
-        "base_url": "https://api.example.com"
-    },
-    "client2": {
-        "base_url": "https://api.anotherexample.com"
+    ```json
+    {
+    "clients": {
+            "client1": {
+                "base_url": "https://api.example.com"
+            },
+            "client2": {
+                "base_url": "https://api.anotherexample.com"
+        }
+        }
     }
-}
 
+Authentication
+The script uses HTTP Basic Authentication. Edit the following variable in the script with your credentials:
 
-2. Run the Script
-Execute the script using Python 3.7 or higher:
-python script_name.py
+    ```python
+    ENCODED_AUTH_STRING = 'YourBase64EncodedCredentials'
 
+Run
 
+🛠️ How to Run
+To execute the script, run the following command in your terminal:
 
-Functions
-sanitize_value(value)
-Recursively sanitizes a value, list, or dictionary by removing control and non-ASCII characters.
-convert_utc_to_local(utc_timestamp, local_tz_str='Africa/Nairobi')
-Converts a UTC timestamp to the specified local timezone and formats it as a string.
-sanitize_sheet_title(title)
-Removes invalid characters from the sheet title and truncates it to a maximum length.
-fetch_inputs(session, base_url)
-Fetches input data from the API.
-fetch_search(session, base_url, input_id)
-Fetches messages for a specific input ID from the API.
-process_client(client_name, data)
-Processes each client by fetching inputs and exporting data to an Excel file.
-main()
-Main function that reads the clients.json file and initiates the data processing for all clients.
+    ```bash
+    python <script_filename>.py
 
-Licensing
-This project is licensed under the MIT License.
+This will generate an Excel file named All_Clients.xlsx, containing data from each client.
 
-Author
-© 2025 Joshua
+🗒️ Code Explanation
+Imports: The script begins by importing necessary libraries for handling asynchronous HTTP requests, data processing, JSON handling, and Excel file creation.
 
-Acknowledgments
-This script leverages:
-- pandas for data manipulation
-- aiohttp for asynchronous HTTP requests
-- pytz for accurate timezone conversions
+Constants:
+
+ENCODED_AUTH_STRING: Base64-encoded string for HTTP Basic Authentication.
+HEADERS: HTTP headers for API requests.
+Sanitization Functions:
+
+sanitize_value(value): Recursively removes unwanted characters from logs.
+convert_utc_to_local(utc_timestamp, local_tz_str='Africa/Nairobi'): Converts UTC timestamps to a local timezone.
+API Interaction:
+
+fetch_inputs(session, base_url): Fetches input details from the Graylog API.
+fetch_search(session, base_url, input_id): Fetches message logs for a specific input ID.
+Data Processing:
+
+process_input(session, base_url, input_item): Fetches the last log message for each input.
+process_client(writer, client_name, data): Processes each client and writes the results to an Excel sheet.
+Main Functionality:
+
+async def main(): The entry point that loads client configurations and orchestrates log fetching and Excel writing.
